@@ -25,6 +25,20 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
+      # Generate version.json with git commit information
+      - name: Generate version.json
+        run: |
+          echo "{" > version.json
+          echo "  \"commit\": \"$(git rev-parse HEAD)\"," >> version.json
+          echo "  \"commit_short\": \"$(git rev-parse --short HEAD)\"," >> version.json
+          echo "  \"author\": \"$(git log -1 --pretty=format:'%an')\"," >> version.json
+          echo "  \"date\": \"$(git log -1 --pretty=format:'%ad')\"" >> version.json
+          echo "}" >> version.json
+
+      # Display the content of version.json (optional)
+      - name: Display version.json
+        run: cat version.json
+
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
